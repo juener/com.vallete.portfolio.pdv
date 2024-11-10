@@ -1,0 +1,28 @@
+@baseUrl = http://localhost:3333
+@email = "johndoe@vallete.com"
+@password = "123456"
+
+
+##### USERS #####
+### Register a new user ###
+# @name post-user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "John Doe", 
+  "email": {{email}}, 
+  "password": {{password}}
+}
+
+### Authenticate an existent user ###
+# @name authenticate
+POST {{baseUrl}}/authenticate
+Content-Type: application/json
+
+{
+  "email": {{email}}, 
+  "password": {{password}}
+}
+###
+@token = {{authenticate.response.body.token}} 
