@@ -2,37 +2,39 @@ import {
   Body,
   ConflictException,
   Controller,
-  Get,
   Post,
   UsePipes,
 } from '@nestjs/common'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { ApiBody } from '@nestjs/swagger'
 import { hash } from 'bcryptjs'
-import { z } from 'zod'
 import { ZodValidationPipe } from 'src/pipes/zod-validation-pipe'
+import { PrismaService } from 'src/prisma/prisma.service'
+import { z } from 'zod'
 
-const userPostBodySchema = z.object({
+const postUserBodySchema = z.object({
   name: z.string().min(3),
   email: z.string().email(),
   password: z.string().min(6),
 })
 
-type UserPostBodySchema = z.infer<typeof userPostBodySchema>
+type PutUserBodySchema = z.infer<typeof postUserBodySchema>
 
 @Controller('/users')
-export class UserController {
+export class PostUserController {
   constructor(private prisma: PrismaService) {}
 
-  @Get()
-  async getUsers() {
-    const users = await this.prisma.user.findMany({})
-
-    return { users }
-  }
-
   @Post()
-  @UsePipes(new ZodValidationPipe(userPostBodySchema))
-  async postUser(@Body() body: UserPostBodySchema) {
+  @UsePipes(new ZodValidationPipe(postUserBodySchema))
+  @ApiBody({
+    schema: {
+      properties: {
+        name: { example: 'John Doe' },
+        email: { example: 'johndoe@vallete.com' },
+        password: { example: '123abc' },
+      },
+    },
+  })
+  async postUser(@Body() body: PutUserBodySchema) {
     const { name, email, password } = body
 
     const userWithSameEmail = await this.prisma.user.findFirst({
@@ -51,7 +53,7 @@ export class UserController {
       data: {
         name,
         email,
-        password,
+        password: hashedPassword,
       },
     })
   }

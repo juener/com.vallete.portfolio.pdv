@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common'
-import { PrismaService } from './prisma/prisma.service'
-import { UserController } from './controllers/user.controller'
 import { ConfigModule } from '@nestjs/config'
-import { envSchema } from './env'
 import { AuthModule } from './auth/auth.module'
-import { AuthenticationController } from './controllers/authentication.controller'
+import { LoginController } from './controllers/auth/login.controller'
+import { GetUsersController } from './controllers/users/get-users.controller'
+import { PostUserController } from './controllers/users/post-users.controller'
+import { PutUserController } from './controllers/users/put-users.controller'
+import { envSchema } from './env'
+import { PrismaService } from './prisma/prisma.service'
+import { GetUserController } from './controllers/users/get-user.controller'
 
 @Module({
   imports: [
@@ -14,7 +17,13 @@ import { AuthenticationController } from './controllers/authentication.controlle
     }),
     AuthModule,
   ],
-  controllers: [UserController, AuthenticationController],
+  controllers: [
+    LoginController,
+    GetUserController,
+    GetUsersController,
+    PostUserController,
+    PutUserController,
+  ],
   providers: [PrismaService],
 })
 export class AppModule {}
