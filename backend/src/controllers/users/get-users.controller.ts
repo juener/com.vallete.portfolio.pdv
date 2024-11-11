@@ -1,14 +1,7 @@
-import {
-  Body,
-  ConflictException,
-  Controller,
-  Get,
-  UseGuards,
-} from '@nestjs/common'
+import { PrismaService } from '@/prisma/prisma.service'
+import { Controller, Get, UseGuards } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
-import { ApiBody, ApiHeader } from '@nestjs/swagger'
-import { hash } from 'bcryptjs'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { ApiHeader } from '@nestjs/swagger'
 
 @Controller('/users')
 @UseGuards(AuthGuard('jwt'))

@@ -6,8 +6,8 @@ import {
   UsePipes,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { ZodValidationPipe } from 'src/pipes/zod-validation-pipe'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { ZodValidationPipe } from '@/pipes/zod-validation-pipe'
+import { PrismaService } from '@/prisma/prisma.service'
 import { z } from 'zod'
 import { compare } from 'bcryptjs'
 import { ApiBody } from '@nestjs/swagger'
@@ -27,7 +27,6 @@ export class LoginController {
   ) {}
 
   @Post('/auth/login')
-  @UsePipes(new ZodValidationPipe(loginPostBodySchema))
   @ApiBody({
     description: 'You must get the access_token to use on protected routes.',
     schema: {
@@ -37,7 +36,9 @@ export class LoginController {
       },
     },
   })
-  async login(@Body() body: LoginPostBodySchema) {
+  async login(
+    @Body(new ZodValidationPipe(loginPostBodySchema)) body: LoginPostBodySchema,
+  ) {
     const { email, password } = body
 
     const user = await this.prisma.user.findUnique({

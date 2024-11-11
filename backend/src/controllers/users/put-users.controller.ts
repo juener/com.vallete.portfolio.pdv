@@ -25,7 +25,6 @@ export class PutUserController {
   constructor(private prisma: PrismaService) {}
 
   @Put()
-  @UsePipes(new ZodValidationPipe(putUserBodySchema))
   @ApiBody({
     schema: {
       properties: {
@@ -36,7 +35,9 @@ export class PutUserController {
       },
     },
   })
-  async putUser(@Body() body: PutUserBodySchema) {
+  async putUser(
+    @Body(new ZodValidationPipe(putUserBodySchema)) body: PutUserBodySchema,
+  ) {
     const { id, name, email, password } = body
 
     const doesUserExist = id

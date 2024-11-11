@@ -24,7 +24,6 @@ export class PostUserController {
   constructor(private prisma: PrismaService) {}
 
   @Post()
-  @UsePipes(new ZodValidationPipe(postUserBodySchema))
   @ApiBody({
     schema: {
       properties: {
@@ -34,7 +33,9 @@ export class PostUserController {
       },
     },
   })
-  async postUser(@Body() body: PutUserBodySchema) {
+  async postUser(
+    @Body(new ZodValidationPipe(postUserBodySchema)) body: PutUserBodySchema,
+  ) {
     const { name, email, password } = body
 
     const userWithSameEmail = await this.prisma.user.findFirst({
