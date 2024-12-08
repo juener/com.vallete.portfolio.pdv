@@ -1,10 +1,4 @@
-import {
-  Body,
-  ConflictException,
-  Controller,
-  Post,
-  UsePipes,
-} from '@nestjs/common'
+import { Body, ConflictException, Controller, Post } from '@nestjs/common'
 import { ApiBody } from '@nestjs/swagger'
 import { hash } from 'bcryptjs'
 import { ZodValidationPipe } from 'src/pipes/zod-validation-pipe'
