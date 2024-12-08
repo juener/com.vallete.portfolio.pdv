@@ -1,8 +1,17 @@
 import { ZodValidationPipe } from '@/pipes/zod-validation-pipe'
 import { PrismaService } from '@/prisma/prisma.service'
-import { Body, ConflictException, Controller, Post } from '@nestjs/common'
+import {
+  Body,
+  ConflictException,
+  Controller,
+  Post,
+  UseGuards,
+} from '@nestjs/common'
 import { ApiBody } from '@nestjs/swagger'
 import { z } from 'zod'
+import { CurrentUser } from '../users/current-user-decorator'
+import { UserPayload } from '@/auth/jwt.strategy'
+import { AuthGuard } from '@nestjs/passport'
 
 const postStoreBodySchema = z.object({
   name: z.string().min(3),
@@ -13,6 +22,7 @@ const postStoreBodySchema = z.object({
 type PostStoreBodySchema = z.infer<typeof postStoreBodySchema>
 
 @Controller('/stores')
+@UseGuards(AuthGuard('jwt'))
 export class PostStoreController {
   constructor(private prisma: PrismaService) {}
 
@@ -29,6 +39,7 @@ export class PostStoreController {
   async postStore(
     @Body(new ZodValidationPipe(postStoreBodySchema))
     body: PostStoreBodySchema,
+    @CurrentUser() user: UserPayload,
   ) {
     const { name, email, address } = body
 
@@ -47,6 +58,11 @@ export class PostStoreController {
         name,
         email,
         address,
+        users: {
+          connect: {
+            id: user.sub,
+          },
+        },
       },
     })
   }

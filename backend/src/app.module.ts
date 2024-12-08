@@ -9,6 +9,7 @@ import { PostStoreController } from './controllers/stores/post-store.controller'
 import { envSchema } from './env'
 import { PrismaService } from './prisma/prisma.service'
 import { GetUserController } from './controllers/users/get-user.controller'
+import { GetStoresController } from './controllers/stores/get-stores-controller'
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { GetUserController } from './controllers/users/get-user.controller'
     GetUsersController,
     PostUserController,
     PutUserController,
+    GetStoresController,
     PostStoreController,
   ],
   providers: [PrismaService],
