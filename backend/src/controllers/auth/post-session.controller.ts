@@ -6,21 +6,21 @@ import { z } from 'zod'
 import { compare } from 'bcryptjs'
 import { ApiBody } from '@nestjs/swagger'
 
-const loginPostBodySchema = z.object({
+const postSessionBodySchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
 })
 
-type LoginPostBodySchema = z.infer<typeof loginPostBodySchema>
+type PostSessionBodySchema = z.infer<typeof postSessionBodySchema>
 
 @Controller()
-export class LoginController {
+export class SessionController {
   constructor(
     private jwtService: JwtService,
     private prisma: PrismaService,
   ) {}
 
-  @Post('/auth/login')
+  @Post('/auth/session')
   @ApiBody({
     description: 'You must get the access_token to use on protected routes.',
     schema: {
@@ -30,8 +30,9 @@ export class LoginController {
       },
     },
   })
-  async login(
-    @Body(new ZodValidationPipe(loginPostBodySchema)) body: LoginPostBodySchema,
+  async postSession(
+    @Body(new ZodValidationPipe(postSessionBodySchema))
+    body: PostSessionBodySchema,
   ) {
     const { email, password } = body
 
