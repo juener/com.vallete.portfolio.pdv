@@ -18,7 +18,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document)
 
   const configService: ConfigService<Env, true> = app.get(ConfigService)
-  const port = configService.get('APP_PORT')
+  const port = configService.get('BACKEND_PORT')
 
   await app.listen(port)
 }
