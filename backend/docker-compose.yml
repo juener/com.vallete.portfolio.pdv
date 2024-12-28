@@ -32,3 +32,7 @@ services:
 volumes:
   pdv-pg-data:
     name: pdv-pg-data
+
+networks:
+  shared-network:
+    external: true
