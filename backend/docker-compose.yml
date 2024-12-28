@@ -21,32 +21,13 @@ services:
       - /app/node_modules
     working_dir: /app
     command: sh -c "npm install --force && npx prisma generate && npm run start:dev"
-    # ports:
-    #   - ${BACKEND_PORT}:${BACKEND_PORT}
+    ports:
+      - ${BACKEND_PORT}:${BACKEND_PORT}
     depends_on:
       - pdv-postgres
     environment:
       NODE_ENV: development
       DATABASE_URL: postgres://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@pdv-pg:5432/${POSTGRES_DATABASE}
-
-  nginx:
-    container_name: pdv-nginx
-    restart: unless-stopped
-    image: nginx
-    ports:
-      - 3101:3101
-    volumes:
-      - ./nginx/nginx.config:/etc/nginx/nginx.config
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email certificate.from.85.209.93.152@vallete.com -d vallete.com --agree-tos
 
 volumes:
   pdv-pg-data:
