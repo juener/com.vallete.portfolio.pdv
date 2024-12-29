@@ -17,7 +17,6 @@ services:
     container_name: pdv-api
     networks:
       - shared-network
-      - internal-network
     image: node:20
     volumes:
       - .:/app
