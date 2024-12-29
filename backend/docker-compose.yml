@@ -3,9 +3,6 @@ name: pdv
 services:
   pdv-postgres:
     container_name: pdv-pg
-    networks:
-      internal-network:
-        driver: bridge
     image: bitnami/postgresql
     # ports:
     #   - ${DB_EXTERNAL_PORT}:5432
@@ -42,5 +39,3 @@ volumes:
 networks:
   shared-network:
     external: true
-  internal-network:
-    driver: bridge
