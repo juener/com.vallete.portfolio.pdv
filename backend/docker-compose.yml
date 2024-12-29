@@ -29,7 +29,7 @@ services:
       - pdv-postgres
     environment:
       NODE_ENV: development
-      DATABASE_URL: postgres://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@pdv-pg:5432/${POSTGRES_DATABASE}
+      DATABASE_URL: postgres://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@pdv-pg:3201/${POSTGRES_DATABASE}
 
 volumes:
   pdv-pg-data:
