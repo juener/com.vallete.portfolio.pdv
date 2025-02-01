@@ -1,8 +1,8 @@
-name: pdv
+name: portfolio-pdv
 
 services:
-  pdv-postgres:
-    container_name: pdv-pg
+  portfolio-pdv-postgres:
+    container_name: portfolio-pdv-pg
     networks:
       - internal-network
     image: bitnami/postgresql
@@ -12,31 +12,39 @@ services:
       POSTGRES_USERNAME: ${POSTGRES_USERNAME}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+    env_file:
+      - .env
     volumes:
-      - pdv-pg-data:/data/postgres
+      - portfolio-pdv-pg-data:/data/postgres
 
   pdv-api:
-    container_name: pdv-api
+    container_name: portfolio-pdv-api
     networks:
       - shared-network
       - internal-network
     image: node:20
     volumes:
-      - .:/app
+      - ./pdv-backend:/app
       - /app/node_modules
     working_dir: /app
-    command: sh -c "npm install --force && npx prisma generate && npm run start:dev"
+    command: >
+      sh -c "cd pdv-backend;
+      npm install --force;
+      npx prisma generate;
+      npm run start:dev"
     ports:
       - ${BACKEND_PORT}:${BACKEND_PORT}
     depends_on:
-      - pdv-postgres
+      - portfolio-pdv-postgres
     environment:
-      NODE_ENV: development
-      DATABASE_URL: postgres://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@pdv-pg:5432/${POSTGRES_DATABASE}
+      BACKEND_PORT: ${BACKEND_PORT}
+      JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: postgres://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@portfolio-pdv-pg:5432/${POSTGRES_DATABASE}
+    env_file:
+      - .env
 
 volumes:
-  pdv-pg-data:
-    name: pdv-pg-data
+  portfolio-pdv-pg-data:
 
 networks:
   shared-network:
